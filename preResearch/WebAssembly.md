@@ -81,7 +81,7 @@
                     console.log("instance2 :", instance2)
                 });
         });
-	console.log(i)
+	console.log(instance1===instance2)//false
 ```
 
 

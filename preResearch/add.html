@@ -10,18 +10,55 @@
 
 <body>
     <script>
+        var importObj1 = {
+            env: {
+                memory: new WebAssembly.Memory({
+                    initial: 1,
+                    maximum: 10
+                }),
+                main: () => {
+                    console.log("main")
+                }
+
+            },
+            wasi_snapshot_preview1: {
+                proc_exit: () => {
+                    console.log("proc_exit");
+                },
+                args_get: () => {
+                    console.log("arges_get");
+                },
+                args_sizes_get: () => {
+                    console.log("args_sizes_get");
+                },
+            }
+        };
+        var importObj2 = {
+            env: {
+                memory: new WebAssembly.Memory({
+                    initial: 128,
+                    maximum: 1024
+                }),
+                main: () => {
+                    console.log("main")
+                }
+
+            },
+            wasi_snapshot_preview1: {
+                proc_exit: () => {
+                    console.log("proc_exit");
+                },
+                args_get: () => {
+                    console.log("arges_get");
+                },
+                args_sizes_get: () => {
+                    console.log("args_sizes_get");
+                },
+            }
+        };
+
         function twoModule() {
             var module1, module2;
-            var importObj1 = {
-                env: {
-                    memory: new WebAssembly.Memory({
-                        initial: 1,
-                        maximum: 10
-                    }),
-                    function: "_add",
-                    a: () => {}
-                }
-            }
             fetch('add.wasm').then(response =>
                 response.arrayBuffer()
             ).then(bytes => {
@@ -41,24 +78,6 @@
 
         function twoInstance() {
             var instance1, instance2;
-            var importObj1 = {
-                env: {
-                    memory: new WebAssembly.Memory({
-                        initial: 1,
-                        maximum: 10
-                    }),
-                    function: "_add",
-                    a: () => {}
-                }
-            };
-            var importObj2 = {
-                env: {
-                    memory: new WebAssembly.Memory({
-                        initial: 128,
-                        maximum: 1024
-                    }),
-                }
-            };
             fetch('add.wasm').then(response =>
                 response.arrayBuffer()
             ).then(bytes => WebAssembly.compile(bytes)).then(
