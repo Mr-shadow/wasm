@@ -31,16 +31,19 @@
             module2 = module;
             console.log("module2 from compile:", module2)
         });
-		console.log(module1===module2) //false
 ```
 
+获得的Module对象只是记录了二进制文件有哪些导入导出属性，并不记录那些属性本身，因此还无法直接使用，需要使用WebAssembly.instantiate()或WebAssembly.instantiateStreaming()获取WebAssembly.Instance对象才能通过Instance对象使用二进制代码中的方法和数据。
 
+```js
+                console.log("module1===module2? ", module1 === module2, module1, module2)
+```
 
-获得的Module对象还无法直接使用，需要使用WebAssembly.instantiate()或WebAssembly.instantiateStreaming()获取WebAssembly.Instance对象才能使用二进制代码中的方法和数据。
+![Snipaste_2022-01-05_11-35-56](Snipaste_2022-01-05_11-35-56.png)
 
 #### 2.WebAssembly.Instance
 
- **`WebAssembly.Instance`** 对象本身是有状态的，是 WebAssembly.Module 的一个可执行实例。 `实例`包含所有的 WebAssembly 导出函数，允许从JavaScript 调用 WebAssembly 代码。一个WebAssembly.Module对象可以生成多个WebAssembly.Instance对象, 二者是不同的对象，各自有用各自的表、导出函数以及线性内存区域：
+ **`WebAssembly.Instance`** 对象本身是有状态的，是 WebAssembly.Module 的一个可执行实例。 `Instance`包含所有的 WebAssembly 导出函数，允许从JavaScript 调用 WebAssembly 代码。一个WebAssembly.Module对象可以生成多个WebAssembly.Instance对象：
 
 ```js
  var instance1, instance2;
@@ -67,23 +70,37 @@
             response.arrayBuffer())
         .then(bytes => WebAssembly.compile(bytes))
         .then(module => {
-            module1 = module;
-            console.log("module1 from compile:", module1)
             WebAssembly.instantiate(module, importObj1)
                 .then(function (instance) {
                     instance1 = instance
                     console.log("instance1 :", instance1)
                 });
 
-            WebAssembly.instantiate(module, importObj2)
+            WebAssembly.instantiate(module, importObj1)
                 .then(function (instance) {
                     instance2 = instance
                     console.log("instance2 :", instance2)
-                	console.log("module1===module2? ", module1 === module2)
                 });
         });
 
 ```
 
-![image-20220105093903527](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20220105093903527.png)
+![Snipaste_2022-01-05_11-17-50](.\Snipaste_2022-01-05_11-17-50.png)
+
+二者是不同的对象，各自有各自的导出属性以及线性内存区域，改变其中一个Instance的线性内存区域不会影响另一个Instance：
+
+```js
+console.log(
+	"instance1 === instance2? ",
+	instance1 === instance2, instance1,
+	instance2);
+let arr1 = new Uint8Array(instance1.exports.memory.buffer, 0, 800000)
+arr1.fill(2)
+```
+
+![Snipaste_2022-01-05_11-17-50](Snipaste_2022-01-05_11-17-50.png)
+
+#### 3.在不同Module产生的Instance之间共享线性内存
+
+- **动态链接**
 

@@ -1,0 +1,1 @@
+emcc add.c -o add.wasm -s -O3 EXPORTED_FUNCTIONS=_add -s STANDALONE_WASM 

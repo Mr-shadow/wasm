@@ -1,0 +1,2 @@
+emcc .\calc_sum.cpp -s MODULARIZE=1  -s EXPORTED_FUNCTIONS=_calc_sum -s EXPORT_NAME='CALC_SUM_MODULE' -o calc_sum.js
+emcc .\fill_array.cpp -s MODULARIZE=1  -s EXPORTED_FUNCTIONS=_fill_array -s EXPORT_NAME='FILL_ARRAY_MODULE' -o fill_array.js

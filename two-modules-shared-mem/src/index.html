@@ -9,9 +9,9 @@
 
     <script>
 
-      var TOTAL_MEMORY = 16777216;
+      var INITIAL_MEMORY = 16777216;
       var WASM_PAGE_SIZE = 65536;
-      var wasmMemory = new WebAssembly.Memory({ 'initial': TOTAL_MEMORY / WASM_PAGE_SIZE, 'maximum': TOTAL_MEMORY / WASM_PAGE_SIZE });
+      var wasmMemory = new WebAssembly.Memory({ 'initial': INITIAL_MEMORY / WASM_PAGE_SIZE, 'maximum': INITIAL_MEMORY / WASM_PAGE_SIZE });
       var buffer = wasmMemory.buffer;
 
       function wasmInstantiator(wasmBinary) {
@@ -30,15 +30,20 @@
     <script>
           
         var wasmModules = {
-          fill_array: FILL_ARRAY_MODULE( { instantiateWasm: wasmInstantiator('fill_array.wasm') , TOTAL_MEMORY, buffer } ),
-          calc_sum:   CALC_SUM_MODULE( { instantiateWasm: wasmInstantiator('calc_sum.wasm') , TOTAL_MEMORY, buffer } )
+          fill_array: FILL_ARRAY_MODULE( { instantiateWasm: wasmInstantiator('fill_array.wasm') , INITIAL_MEMORY, buffer } ),
+          calc_sum:   CALC_SUM_MODULE( { instantiateWasm: wasmInstantiator('calc_sum.wasm') , INITIAL_MEMORY, buffer } )
         };
 
         function fill_array_and_sum_it(fill_array_module, calc_sum_module) {
           var n = 10;
-          var ptr_from_wasm = fill_array_module.ccall('fill_array', 'number', [], [n]);
-          var sum = calc_sum_module.ccall('calc_sum', 'number', ['number','number'], [ptr_from_wasm, n]);
-          alert('The sum of all number from 0 to ' + (n-1) + " is " + sum);
+          // var ptr_from_wasm = fill_array_module.ccall('fill_array', 'number', [], [n]);
+          var ptr_from_wasm = fill_array_module._fill_array(n);
+          console.log("return ptr is:",ptr_from_wasm)
+          console.log("fill_array_module buffer:",fill_array_module.buffer);
+          var sum=calc_sum_module._calc_sum(ptr_from_wasm, n);
+          console.log("calc_sum_module buffer:",calc_sum_module.buffer);
+          console.log("same buffer? ",fill_array_module.buffer === calc_sum_module.buffer)
+          console.log('The sum of all number from 0 to ' + (n-1) + " is " + sum);
         };
 
         wasmModules.fill_array.then( (fill_array_module) => {
