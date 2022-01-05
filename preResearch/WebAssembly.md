@@ -79,10 +79,11 @@
                 .then(function (instance) {
                     instance2 = instance
                     console.log("instance2 :", instance2)
+                	console.log("module1===module2? ", module1 === module2)
                 });
         });
-	console.log(instance1===instance2)//false
+
 ```
 
-
+![image-20220105093903527](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20220105093903527.png)
 
