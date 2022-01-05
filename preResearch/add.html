@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function twoModule() {
+            var module1, module2;
+            var importObj1 = {
+                env: {
+                    memory: new WebAssembly.Memory({
+                        initial: 1,
+                        maximum: 10
+                    }),
+                    function: "_add",
+                    a: () => {}
+                }
+            }
+            fetch('add.wasm').then(response =>
+                response.arrayBuffer()
+            ).then(bytes => {
+                WebAssembly.instantiate(bytes, importObj1).then(
+                    res => {
+                        module2 = res.module;
+                        console.log("module2 from instantiate:", module2);
+                    }
+                )
+                return WebAssembly.compile(bytes)
+            }).then(module => {
+                module1 = module;
+                console.log("module1 from compile:", module1);
+            });
+            console.log("module1===module2? ", module1 === module2)
+        }
+
+        function twoInstance() {
+            var instance1, instance2;
+            var importObj1 = {
+                env: {
+                    memory: new WebAssembly.Memory({
+                        initial: 1,
+                        maximum: 10
+                    }),
+                    function: "_add",
+                    a: () => {}
+                }
+            };
+            var importObj2 = {
+                env: {
+                    memory: new WebAssembly.Memory({
+                        initial: 128,
+                        maximum: 1024
+                    }),
+                }
+            };
+            fetch('add.wasm').then(response =>
+                response.arrayBuffer()
+            ).then(bytes => WebAssembly.compile(bytes)).then(
+                module => {
+                    WebAssembly.instantiate(module, importObj1)
+                        .then(function (instance) {
+                            instance1 = instance
+                            console.log("instance1 :", instance1)
+                        });
+
+                    WebAssembly.instantiate(module, importObj2)
+                        .then(function (instance) {
+                            instance2 = instance
+                            console.log("instance2 :", instance2)
+                        });
+                    // while (!instance1 || !instance2);
+                    console.log(instance1 === instance2);
+                });
+        }
+    </script>
+    <script>
+        twoInstance()
+    </script>
+</body>
+
+</html>
