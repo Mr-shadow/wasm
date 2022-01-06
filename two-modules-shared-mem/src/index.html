@@ -36,7 +36,6 @@
 
         function fill_array_and_sum_it(fill_array_module, calc_sum_module) {
           var n = 10;
-          // var ptr_from_wasm = fill_array_module.ccall('fill_array', 'number', [], [n]);
           var ptr_from_wasm = fill_array_module._fill_array(n);
           console.log("return ptr is:",ptr_from_wasm)
           console.log("fill_array_module buffer:",fill_array_module.buffer);

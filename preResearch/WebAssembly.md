@@ -1,4 +1,25 @@
-## WebAssembly预研：
+#  一文读懂WebAssembly——原理+实例
+
+## 1 WebAssembly原理
+
+### 1.1 什么是WebAssembly
+
+WebAssembly主要用来提高程序在web浏览器上的执行效率，它是：
+
+- **一种底层类汇编语言**，能够在所有当代浏览器以及大部分移动浏览器上高效运行。
+- **一种编译目标**，因此可以将编译型语言（C++、Rust等）编写的代码编译成WebAssembly，在Web端运行。
+
+### 1.2 WebAssembly工作原理
+
+WebAssembly由开发者使用其他编程语言编写程序，并编译为WebAssembly二进制格式(.wasm文件)，然后由浏览器解析WebAssembly二进制代码为机器码执行。
+
+![pic1](pic1.png)
+
+以上列举了部分支持编译到WebAssembly的编程语言，各自使用不同的编译工具编译WebAssembly模块。也可以使用WebAssemly定义的**S-表达式**编译WebAssembly模块。WebAssembly模块可以被支持WebAssembly的浏览器解析并运行。
+
+### 1.3 WebAssembly模块
+
+
 
 #### 1. WebAssembly.Module
 
@@ -98,7 +119,7 @@ let arr1 = new Uint8Array(instance1.exports.memory.buffer, 0, 800000)
 arr1.fill(2)
 ```
 
-![Snipaste_2022-01-05_11-17-50](Snipaste_2022-01-05_11-17-50.png)
+![Snipaste_2022-01-05_11-17-50](Snipaste_2022-01-05_11-30-07.png)
 
 #### 3.在不同Module产生的Instance之间共享线性内存
 
