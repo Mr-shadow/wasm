@@ -16,7 +16,10 @@
                     initial: 1,
                     maximum: 10
                 }),
-                main: () => {}
+                main: () => {
+                    console.log("main")
+                }
+
             },
             wasi_snapshot_preview1: {
                 proc_exit: () => {
@@ -36,7 +39,10 @@
                     initial: 128,
                     maximum: 1024
                 }),
-                main: () => {}
+                main: () => {
+                    console.log("main")
+                }
+
             },
             wasi_snapshot_preview1: {
                 proc_exit: () => {
@@ -50,59 +56,52 @@
                 },
             }
         };
-        var module1, module2;
-        var instance1, instance2;
 
         function twoModule() {
+            var module1, module2;
             fetch('add.wasm').then(response =>
                 response.arrayBuffer()
             ).then(bytes => {
-
-                WebAssembly.compile(bytes).then(module => {
-                    module1 = module
-                });
-
                 WebAssembly.instantiate(bytes, importObj1).then(
                     res => {
-                        module2 = res.module
-                        console.log("module1===module2? ", module1 === module2)
-                        console.log("module1:", module1, "module2:", module2)
+                        module2 = res.module;
+                        console.log("module2 from instantiate:", module2);
                     }
-                );
+                )
+                return WebAssembly.compile(bytes)
+            }).then(module => {
+                module1 = module;
+                console.log("module1 from compile:", module1);
             });
-
+            console.log("module1===module2? ", module1 === module2)
         }
 
         function twoInstance() {
+            var instance1, instance2;
             fetch('add.wasm').then(response =>
                 response.arrayBuffer()
             ).then(bytes => WebAssembly.compile(bytes)).then(
                 module => {
+                    console.log("module :", module) 
                     WebAssembly.instantiate(module, importObj1)
                         .then(function (instance) {
                             instance1 = instance
                             console.log("instance1 :", instance1)
-                            let arr1 = new Uint8Array(instance1.exports.memory.buffer, 0, 800000)
-                            arr1.fill(2)
                         });
 
                     WebAssembly.instantiate(module, importObj2)
                         .then(function (instance) {
                             instance2 = instance
                             console.log("instance2 :", instance2)
-                            console.log(
-                                "instance1 === instance2? ",
-                                instance1 === instance2, instance1,
-                                instance2);
-
+                            console.log(instance1 === instance2, instance1,instance2);
                         });
                     // while (!instance1 || !instance2);
-
+                    
                 });
         }
     </script>
     <script>
-        twoModule()
+        twoInstance()
     </script>
 </body>
 
