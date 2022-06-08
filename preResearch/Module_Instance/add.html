@@ -60,9 +60,10 @@
 
                 WebAssembly.compile(bytes).then(module => {
                     module1 = module
+                    console.log("module1:", module1)
                 });
 
-                WebAssembly.instantiate(bytes, importObj1).then(
+                WebAssembly.instantiate(bytes, importObj2).then(
                     res => {
                         module2 = res.module
                         console.log("module1===module2? ", module1 === module2)
@@ -100,9 +101,45 @@
 
                 });
         }
+
+        function memory() {
+            var memory = new WebAssembly.Memory({
+                initial: 10,
+                maximum: 100
+            });
+            WebAssembly.instantiateStreaming(fetch('add.wasm'), {
+                    // js: {
+                    //     mem: memory
+                    // },
+                    env: {
+                        mem: memory,
+                        main: () => {}
+                    },
+                    wasi_snapshot_preview1: {
+                        proc_exit: () => {
+                            console.log("proc_exit");
+                        },
+                        args_get: () => {
+                            console.log("arges_get");
+                        },
+                        args_sizes_get: () => {
+                            console.log("args_sizes_get");
+                        },
+                    }
+                })
+                .then(obj => {
+                    var i32 = new Uint32Array(memory.buffer);
+                    for (var i = 0; i < 10; i++) {
+                        i32[i] = i;
+                    }
+                    var sum = obj.instance.exports.add(i32[1], 10);
+                    console.log(sum);
+                    console.log(obj.instance);
+                });
+        }
     </script>
     <script>
-        twoModule()
+        memory()
     </script>
 </body>
 

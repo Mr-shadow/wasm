@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var Module = {
+            onRuntimeInitialized: function () {
+
+                var jsString = 'this is a string';
+                var lengthBytes = Module.lengthBytesUTF8(jsString) + 1;
+                var stringOnWasmHeap = Module._malloc(lengthBytes);
+                Module.stringToUTF8(jsString, stringOnWasmHeap, lengthBytes);
+                Module.getString(stringOnWasmHeap)  //C++导出的函数，接收一个int类型的地址，将其转换为char*获取到字符串
+                Module._free(stringOnWasmHeap)
+                
+            }
+
+        }
+    </script>
+    <script src="./str.js"></script>
+</body>
+
+</html>
