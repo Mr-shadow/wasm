@@ -1,9 +1,0 @@
-﻿  源.cpp
-C:\Users\jiean.he\source\repos\demoproject\demoproject\LRU.h(9,48): warning C4346: "std::list<std::pair<int,DataType>,std::allocator<std::pair<int,DataType>>>::iterator": 依赖名称不是类型
-C:\Users\jiean.he\source\repos\demoproject\demoproject\LRU.h(9,48): message : 用“typename”为前缀来表示类型
-C:\Users\jiean.he\source\repos\demoproject\demoproject\LRU.h(44): message : 查看对正在编译的 类 模板 实例化“LRU<DataType>”的引用
-C:\Users\jiean.he\source\repos\demoproject\demoproject\LRU.h(9,2): error C2923: “std::unordered_map”: 对于参数“_Ty”，“std::list<std::pair<int,DataType>,std::allocator<std::pair<int,DataType>>>::iterator”不是有效的 模板 类型变量
-C:\Users\jiean.he\source\repos\demoproject\demoproject\LRU.h(9): message : 参见“std::list<std::pair<int,DataType>,std::allocator<std::pair<int,DataType>>>::iterator”的声明
-C:\Users\jiean.he\source\repos\demoproject\demoproject\LRU.h(9,2): error C2976: “std::unordered_map”: 模板 参数太少
-D:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\include\unordered_map(69): message : 参见“std::unordered_map”的声明
-C:\Users\jiean.he\source\repos\demoproject\demoproject\源.cpp(112,22): warning C4018: “<”: 有符号/无符号不匹配
